@@ -1,26 +1,26 @@
 import { model, Schema } from 'mongoose';
 
-export const Location = model(
-  'location',
+export const AdminConfig = model(
+  'adminConfig',
   new Schema(
     {
-      CUSTOMER: {
-        type: Schema.Types.ObjectId,
-        ref: 'customer',
-      },
-
-      ROOM: {
+      CAL_MITOR: {
         type: Number,
         required: true,
       },
 
-      FOOR: {
+      CAL_INTERNET: {
         type: Number,
         required: true,
       },
 
-      SECTION: {
-        type: Number,
+      USERNAME: {
+        type: String,
+        required: true,
+      },
+
+      PASSWORD: {
+        type: String,
         required: true,
       },
     },

@@ -21,5 +21,10 @@ export const Customer = model(
       type: Boolean,
       default: false,
     },
+
+    PHONE: {
+      type: String,
+      maxlength: 10,
+    },
   }),
 );
