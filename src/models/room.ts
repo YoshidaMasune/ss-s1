@@ -4,10 +4,6 @@ export const Room = model(
   'room',
   new Schema(
     {
-      CUSTOMER: {
-        type: Schema.Types.ObjectId,
-        ref: 'customer',
-      },
 
       ROOM: {
         type: Number,

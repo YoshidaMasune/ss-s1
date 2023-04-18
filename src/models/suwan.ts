@@ -6,15 +6,13 @@ export const Suwan = mongoose.model(
     {
       CUSTOMER: {
         type: mongoose.Schema.Types.ObjectId,
+        ref: 'customer'
       },
 
-      LOCATION: {
+      ROOM: {
         type: mongoose.Schema.Types.ObjectId,
-      },
-
-      MITER: {
-        type: Schema.Types.ObjectId,
-        ref: 'mitor',
+        required: true,
+        ref: 'room'
       },
     },
     { timestamps: true },

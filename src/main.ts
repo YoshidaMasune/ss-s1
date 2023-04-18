@@ -1,5 +1,11 @@
 import mongoose from 'mongoose';
-import express, { Application, Express, Router, urlencoded } from 'express';
+import express, {
+  Application,
+  Express,
+  NextFunction,
+  Router,
+  urlencoded,
+} from 'express';
 import dotenv from 'dotenv';
 import { RouterMain } from './interface/routerMain';
 
@@ -7,10 +13,13 @@ dotenv.config();
 const { MONGO_URI } = process.env;
 const PORT = process.env.PORT || 5001;
 
-export const main = (Routers: Array<RouterMain>) => {
+export const main = (Routers: Array<RouterMain>, middlewares: Array<any>) => {
   const app = express();
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: false }));
+
+  /**
+   * GENARATE MIDDLEWARES RECURSIVE FUNCTION
+   */
+  getMiddlewares(app, middlewares);
 
   /*
    * GENARATE ROUTES WITH RECURSIVE Function
@@ -36,6 +45,7 @@ export const main = (Routers: Array<RouterMain>) => {
   }
 };
 
+// RECURSIVE
 const genRoutes = (
   app: Application,
   Routers: Array<RouterMain>,
@@ -46,5 +56,18 @@ const genRoutes = (
     const curRoute = Routers[0];
     app.use(curRoute.endpoint, curRoute.route);
     return genRoutes(app, Routers.slice(1, Routers.length));
+  }
+};
+
+const getMiddlewares = (
+  app: Application,
+  middlewares: Array<any>,
+): NextFunction | undefined => {
+  if (middlewares.length === 0 || middlewares.length === undefined) {
+    return undefined;
+  } else {
+    const curMiddleware = middlewares[0];
+    app.use(curMiddleware);
+    return getMiddlewares(app, middlewares.slice(1, middlewares.length));
   }
 };

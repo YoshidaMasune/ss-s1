@@ -1,7 +1,10 @@
-import { RouterMain } from './interface/routerMain';
 import { main } from './main';
+import { RouterMain } from './interface/routerMain';
 import { CustomerRouter } from './routers/customer';
 import { MitorRouter } from './routers/mitor';
+import { MitorRoomRouter } from './routers/mitorRoom';
+
+import express, { urlencoded } from 'express';
 
 const Routers: Array<RouterMain> = [
   {
@@ -12,6 +15,13 @@ const Routers: Array<RouterMain> = [
     endpoint: '/mitor',
     route: MitorRouter,
   },
+
+  {
+    endpoint: '/mitor-room',
+    route: MitorRoomRouter,
+  },
 ];
 
-main(Routers);
+const middlewares = [express.json(), urlencoded({ extended: false })];
+
+main(Routers, middlewares);
