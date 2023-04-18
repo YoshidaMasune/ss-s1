@@ -91,14 +91,20 @@ export const MitorControll = () => {
    * @param req
    * @param res
    */
-  const read = async (req: Request, res: Response) => {
+  const readMany = async (req: Request, res: Response) => {
     try {
-      const result = await Room.find();
+      const result = await Room.find({}).sort('ROOM -test');
+      const sortFoor = result.sort((a, b) => a.FOOR - b.FOOR);
+      // const lastSort = sortFoor.sort((a, b) => a.SECTION - b.SECTION);
 
-      const section_1 = result.filter((room) => room.SECTION === 1);
-      const section_2 = result.filter((room) => room.SECTION === 2);
+      const sect1 = sortFoor.filter((room) => room.SECTION === 1),
+        sect2 = sortFoor.filter((room) => room.SECTION === 2),
+        lastResult = {
+          sect1,
+          sect2,
+        };
 
-      res.status(200).json(section_1);
+      res.status(200).json(lastResult);
     } catch (error) {
       console.log(error);
       res.status(500).json({
@@ -110,6 +116,6 @@ export const MitorControll = () => {
 
   return {
     createHandle,
-    read,
+    readMany,
   };
 };

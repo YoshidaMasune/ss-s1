@@ -7,8 +7,8 @@ const controll = MitorControll();
 
 router.post('/', hasRoomRecorded, controll.createHandle);
 
-// router.get('/', controll.readMany);
+router.get('/', controll.readMany);
 
-router.get('/', controll.read);
+router.get('/:RID', controll.readMany);
 
 export const MitorRoomRouter = router;
