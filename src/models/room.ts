@@ -4,7 +4,6 @@ export const Room = model(
   'room',
   new Schema(
     {
-
       ROOM: {
         type: Number,
         required: true,
