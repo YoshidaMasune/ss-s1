@@ -8,7 +8,7 @@ router.get('/', controll.readMany);
 
 router.post('/', controll.create);
 
-router.get('/CID');
+router.get('/CID', controll.readById);
 
 router.put('/', controll.updateOne);
 

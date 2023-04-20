@@ -79,6 +79,25 @@ export const customerControll = () => {
     }
   };
 
+  const readById = async (req: Request, res: Response) => {
+    try {
+      const CID = req.params.CID || {};
+      if (CID === null) {
+        res.status(400).send('have no CID');
+      } else {
+        const result = await Customer.find({ _id: CID });
+        if (result === null) {
+          res.status(404).send('not found this customer');
+        } else {
+          res.status(200).json(result);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  };
+
   /**=================================================================================================================
    * =================================================== EDIT ======================================================
    *
@@ -169,6 +188,7 @@ export const customerControll = () => {
   return {
     create,
     readMany,
+    readById,
     updateOne,
     deleteAll,
     deleteById,
