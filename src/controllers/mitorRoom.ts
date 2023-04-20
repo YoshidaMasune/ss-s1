@@ -5,7 +5,9 @@ import { Suwan } from '../models/suwan';
 import { Customer } from '../models/customer';
 
 export const MitorControll = () => {
-  /**
+  /**================================================================================================================
+   * ===============================================================================================================
+   *
    * CREATE
    * @param req
    * @param res
@@ -86,25 +88,32 @@ export const MitorControll = () => {
     }
   };
 
-  /**
+  /**=============================================================================================================
+   *==============================================================================================================
+   * READ MANY
    *
    * @param req
    * @param res
    */
   const readMany = async (req: Request, res: Response) => {
     try {
-      const result = await Room.find({}).sort('ROOM -test');
-      const sortFoor = result.sort((a, b) => a.FOOR - b.FOOR);
-      // const lastSort = sortFoor.sort((a, b) => a.SECTION - b.SECTION);
+      const sectNumbers = {
+        sect1: 1,
+        sect2: 2,
+      };
+      const sect1 = await Room.find({ SECTION: sectNumbers.sect1 })
+        .sort('ROOM -test')
+        .populate('MITOR');
+      const sect2 = await Room.find({ SECTION: sectNumbers.sect2 })
+        .sort('ROOM -test')
+        .populate('MITOR');
 
-      const sect1 = sortFoor.filter((room) => room.SECTION === 1),
-        sect2 = sortFoor.filter((room) => room.SECTION === 2),
-        lastResult = {
-          sect1,
-          sect2,
-        };
+      const result = {
+        sect1,
+        sect2,
+      };
 
-      res.status(200).json(lastResult);
+      res.status(200).json(result);
     } catch (error) {
       console.log(error);
       res.status(500).json({
@@ -114,8 +123,59 @@ export const MitorControll = () => {
     }
   };
 
+  /**================================================================================================================
+   * ================================================================================================================
+   *  READBYID
+   *
+   * @param req
+   * @param res
+   */
+  const readById = async (req: Request, res: Response) => {
+    try {
+      const result = await Room.findOne({ _id: req.params.RID }).populate(
+        'MITOR',
+      );
+
+      if (result === null || result === undefined) {
+        res.status(404).json({
+          msg: 'not found',
+          status: 404,
+        });
+      } else {
+        res.status(200).json(result);
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({
+        msg: error,
+        status: 500,
+      });
+    }
+  };
+
+  /**=================================================================================================================
+   * ======================================= UPDATE ==================================================================
+   *
+   * @param req
+   * @param res
+   */
+  const editById = async (req: Request, res: Response) => {
+    const room = req.body.room;
+    const RID = req.params.RID;
+
+    try {
+      const result = await Room.updateOne({ _id: RID }, { $set: { ...room } });
+      res.status(200).json(result);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  };
+
   return {
     createHandle,
     readMany,
+    readById,
+    editById,
   };
 };
