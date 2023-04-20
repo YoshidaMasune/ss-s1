@@ -5,6 +5,7 @@ import { MitorRouter } from './routers/mitor';
 import { MitorRoomRouter } from './routers/mitorRoom';
 
 import express, { urlencoded } from 'express';
+import { SuwanRouter } from './routers/suwan';
 
 const Routers: Array<RouterMain> = [
   {
@@ -19,6 +20,11 @@ const Routers: Array<RouterMain> = [
   {
     endpoint: '/mitor-room',
     route: MitorRoomRouter,
+  },
+
+  {
+    endpoint: '/suwan',
+    route: SuwanRouter,
   },
 ];
 

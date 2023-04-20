@@ -14,9 +14,18 @@ export const fillDateAndMitor = async (
       'MITOR',
     );
 
+    /**
+     *
+     *
+     */
     if (oldRecord === null) {
       res.status(404).send(`not found record`);
     } else {
+
+    /**
+     *
+     *
+     */
       const mitorRecord = await Mitor.findOne({ _id: oldRecord.MITOR._id });
 
       if (mitorRecord === null) {
