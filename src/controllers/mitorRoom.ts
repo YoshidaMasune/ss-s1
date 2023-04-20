@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Mitor } from '../models/mitor';
 import { Room } from '../models/room';
 import { Suwan } from '../models/suwan';
 import { Customer } from '../models/customer';
+import { error } from 'console';
 
-export const MitorControll = () => {
+export const MitorRoomControll = () => {
   /**================================================================================================================
    * ===============================================================================================================
    *
@@ -53,6 +54,7 @@ export const MitorControll = () => {
 
         // save customer
         customerDoc.save().catch((err) => {
+          console.log(error);
           res.status(500).json({
             mgs: err,
             status: 500,
@@ -101,6 +103,10 @@ export const MitorControll = () => {
         sect1: 1,
         sect2: 2,
       };
+
+      /*
+       * fill secttion 1 and 2
+       */
       const sect1 = await Room.find({ SECTION: sectNumbers.sect1 })
         .sort('ROOM -test')
         .populate('MITOR');
@@ -108,6 +114,9 @@ export const MitorControll = () => {
         .sort('ROOM -test')
         .populate('MITOR');
 
+      /**
+       * store secion
+       */
       const result = {
         sect1,
         sect2,
@@ -136,6 +145,10 @@ export const MitorControll = () => {
         'MITOR',
       );
 
+      /**
+       * not found room in database
+       * return status 400 not found
+       */
       if (result === null || result === undefined) {
         res.status(404).json({
           msg: 'not found',
@@ -172,10 +185,53 @@ export const MitorControll = () => {
     }
   };
 
+  /**=================================================================================================================
+   * ======================================= DELETE ==================================================================
+   *
+   * @param req
+   * @param res
+   */
+
+  const deleteById = async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    const RID = req.params.RID;
+    try {
+      /**
+       * Not found RID in req.params
+       */
+      if (RID === undefined) {
+        res.status(400).json({
+          msg: 'not found RID in req.params',
+        });
+      } else {
+        const result = await Room.deleteOne({ _id: RID });
+        res.status(200).json(result);
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  };
+
+  const deleteAll = async (req: Request, res: Response) => {
+    try {
+      const result = await Room.deleteMany({});
+      res.status(200).json(result);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
+  };
+
   return {
     createHandle,
     readMany,
     readById,
     editById,
+    deleteById,
+    deleteAll,
   };
 };

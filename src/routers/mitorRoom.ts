@@ -1,16 +1,24 @@
+import { fillDateAndMitor } from '../middlewares/fillDateAndMitor';
 import { hasRoomRecorded } from '../middlewares/hasRoomRecorded';
-import { MitorControll } from './../controllers/mitorRoom';
+import { validExRoom } from '../middlewares/validRoom';
+import { MitorRoomControll } from './../controllers/mitorRoom';
 import { Router } from 'express';
 
 const router = Router();
-const controll = MitorControll();
+const controll = MitorRoomControll();
 
-router.post('/', hasRoomRecorded, controll.createHandle);
+router.post('/', validExRoom, hasRoomRecorded, controll.createHandle);
 
 router.get('/', controll.readMany);
 
 router.get('/:RID', controll.readById);
 
-router.put('/:RID', hasRoomRecorded, controll.editById);
+router.put('/:RID', fillDateAndMitor, hasRoomRecorded, controll.editById);
+
+router.delete('/:RID', controll.deleteById);
+
+router.delete('/');
+
+router.delete('/', controll.deleteAll);
 
 export const MitorRoomRouter = router;
