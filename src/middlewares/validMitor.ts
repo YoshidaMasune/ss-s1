@@ -1,37 +1,38 @@
-import { NextFunction, Request, Response } from 'express';
-import { Room } from '../models/room';
+import { Request, Response, NextFunction } from 'express';
 import { Mitor } from '../models/mitor';
-export const fillDateAndMitor = async (
+import { Room } from '../models/room';
+
+export const validMitor = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  /**
-   *
-   */
   try {
-    const oldRoom = await Room.findOne({ _id: req.params.RID }).populate(
-      'MITOR',
-    );
+    let MID = req.params.MID || {};
+    const RID = req.params.RID || {};
 
     /**
-     *
-     *
+     * search MID when this middleware use for '/mitor-mitor' endpoint
      */
-    if (oldRoom === null) {
-      res.status(404).send(`not found record`);
+    if (MID === null) {
+      const searchRoomForMitor = await Room.findOne({ _id: RID }).populate(
+        'MITOR',
+      );
+
+      console.log(searchRoomForMitor);
+      if (searchRoomForMitor === null) {
+        res.status(400).send('bad rerquest');
+      } else {
+        MID = searchRoomForMitor.MITOR._id;
+      }
     } else {
-      /**
-       *
-       *
-       */
-      const valMitor = await Mitor.findOne({ _id: oldRoom.MITOR._id });
+      const findObject = { _id: MID };
+      const valMitor = await Mitor.findOne(findObject); // return for check
 
       if (valMitor === null) {
         res.status(404).send(`not found mitor record`);
       } else {
         /**
-         *
          *
          * month fill
          */
@@ -40,6 +41,8 @@ export const fillDateAndMitor = async (
         // return number of month
         const oldMonth = new Date(oldMitorRecord.TIME_EDIT).getMonth();
         const currentMonth = new Date(req.body.mitor.TIME_EDIT).getMonth();
+
+        console;
 
         /**
          *
@@ -68,11 +71,13 @@ export const fillDateAndMitor = async (
           if (oldNumMitor > currentMitor) {
             res.status(400).send('bad mitor');
           } else {
+            console.log('test good');
             next();
           }
         }
       }
     }
+    // find Mitor
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
