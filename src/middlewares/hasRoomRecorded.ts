@@ -7,16 +7,21 @@ export const hasRoomRecorded = async (
   next: NextFunction,
 ) => {
   const room = req.body.room;
+  const method = req.method;
   try {
     const checkRoomRequest = await Room.find({ ...room });
-
     if (checkRoomRequest.length === 0) {
       next();
     } else {
-      res.status(400).json({
-        msg: 'room had recorded',
-        status: 400,
-      });
+      // when have data in database on (put and delete method) for procesess
+      if (method === 'PUT' || method === 'delete') {
+        next();
+      } else {
+        res.status(400).json({
+          msg: 'room had recorded',
+          status: 400,
+        });
+      }
     }
   } catch (error) {
     res.status(500).send(error);
