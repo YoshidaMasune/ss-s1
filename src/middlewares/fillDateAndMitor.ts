@@ -26,7 +26,6 @@ export const fillDateAndMitor = async (
        *
        */
       const valMitor = await Mitor.findOne({ _id: oldRoom.MITOR._id });
-
       if (valMitor === null) {
         res.status(404).send(`not found mitor record`);
       } else {

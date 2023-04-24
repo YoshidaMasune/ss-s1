@@ -3,16 +3,7 @@ import { Mitor } from '../models/mitor';
 import { Room } from '../models/room';
 import { Suwan } from '../models/suwan';
 import { Customer } from '../models/customer';
-import { error } from 'console';
-import exp from 'constants';
 
-/**================================================================================================================
- * ===============================================================================================================
- *
- * CREATE
- * @param req
- * @param res
- */
 const createHandle = (req: Request, res: Response) => {
   const mitor = req.body.mitor;
   const room = req.body.room;
@@ -54,7 +45,7 @@ const createHandle = (req: Request, res: Response) => {
 
       // save customer
       customerDoc.save().catch((err) => {
-        console.log(error);
+        console.log(err);
         res.status(500).json({
           mgs: err,
           status: 500,
@@ -67,18 +58,12 @@ const createHandle = (req: Request, res: Response) => {
      */
     Promise.all([mitorDoc.save(), roomDoc.save(), suwanDoc.save()])
       .then((result) => {
-        /**
-         * response for OK
-         */
         res.status(200).json({
           msg: 'insert successfull',
           status: 200,
         });
       })
       .catch((err) => {
-        /**
-         * response for ERROR
-         */
         res.status(500).json({
           mgs: err,
           status: 500,
@@ -90,13 +75,6 @@ const createHandle = (req: Request, res: Response) => {
   }
 };
 
-/**=============================================================================================================
- *==============================================================================================================
- * READ MANY
- *
- * @param req
- * @param res
- */
 const readMany = async (req: Request, res: Response) => {
   try {
     const sectNumbers = {
@@ -114,9 +92,6 @@ const readMany = async (req: Request, res: Response) => {
       .sort('ROOM -test')
       .populate('MITOR');
 
-    /**
-     * store secion
-     */
     const result = {
       sect1,
       sect2,
@@ -132,31 +107,17 @@ const readMany = async (req: Request, res: Response) => {
   }
 };
 
-/**================================================================================================================
- * ================================================================================================================
- *  READBYID
- *
- * @param req
- * @param res
- */
 const readById = async (req: Request, res: Response) => {
   try {
     const result = await Room.findOne({ _id: req.params.RID }).populate(
       'MITOR',
     );
-
-    /**
-     * not found room in database
-     * return status 400 not found
-     */
-    if (result === null || result === undefined) {
-      res.status(404).json({
-        msg: 'not found',
-        status: 404,
-      });
-    } else {
-      res.status(200).json(result);
-    }
+    Boolean(result) === true
+      ? res.status(200).json(result)
+      : res.status(404).json({
+          msg: 'not found',
+          status: 404,
+        });
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -166,12 +127,6 @@ const readById = async (req: Request, res: Response) => {
   }
 };
 
-/**=================================================================================================================
- * ======================================= UPDATE ==================================================================
- *
- * @param req
- * @param res
- */
 const editById = async (req: Request, res: Response) => {
   const room = req.body.room;
   const RID = req.params.RID;
@@ -184,13 +139,6 @@ const editById = async (req: Request, res: Response) => {
     res.status(500).send(error);
   }
 };
-
-/**=================================================================================================================
- * ======================================= DELETE ==================================================================
- *
- * @param req
- * @param res
- */
 
 const deleteById = async (req: Request, res: Response, next: NextFunction) => {
   const RID = req.params.RID;

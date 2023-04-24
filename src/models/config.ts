@@ -23,6 +23,10 @@ export const AdminConfig = model(
         type: String,
         required: true,
       },
+
+      token: {
+        type: String,
+      },
     },
     { timestamps: true },
   ),

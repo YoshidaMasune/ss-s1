@@ -1,3 +1,4 @@
+import authToken from '../middlewares/authToken';
 import { fillDateAndMitor } from '../middlewares/fillDateAndMitor';
 import { hasRoomRecorded } from '../middlewares/hasRoomRecorded';
 import { validMitor } from '../middlewares/validMitor';
@@ -7,24 +8,29 @@ import { Router } from 'express';
 
 const router = Router();
 
-router.post('/', validExRoom, hasRoomRecorded, mitorRoom.createHandle);
+router.post(
+  '/',
+  authToken,
+  validExRoom,
+  hasRoomRecorded,
+  mitorRoom.createHandle,
+);
 
-router.get('/', mitorRoom.readMany);
+router.get('/', authToken, mitorRoom.readMany);
 
 router.get('/:RID', mitorRoom.readById);
 
 router.put(
   '/:RID',
+  authToken,
   fillDateAndMitor,
   validMitor,
   hasRoomRecorded,
   mitorRoom.editById,
 );
 
-router.delete('/:RID', mitorRoom.deleteById);
+router.delete('/:RID', authToken, mitorRoom.deleteById);
 
-router.delete('/');
-
-router.delete('/', mitorRoom.deleteAll);
+router.delete('/', authToken, mitorRoom.deleteAll);
 
 export const MitorRoomRouter = router;
